@@ -12,6 +12,18 @@
 
 namespace hikcv {
 
+struct Error: std::runtime_error {
+    explicit Error(const std::string& msg): std::runtime_error(msg) { }
+};
+
+struct CameraError: Error {
+    explicit CameraError(const std::string& msg): Error("'"+msg+"' failed") { }
+};
+
+struct PixelTypeError: Error {
+    explicit PixelTypeError(void): Error("Invalid pixel type") { }
+};
+
 
 constexpr unsigned HIKROBOT_CV_TIMEOUT_MSEC = 20000;
 constexpr int ENUM_DEVICE_TYPE = MV_USB_DEVICE|MV_GIGE_DEVICE;
@@ -24,13 +36,13 @@ class OpencvCamera final {
     OpencvCamera(MV_CC_DEVICE_INFO* deviceInfo): _handle(nullptr), _started(false), _have_data(false) {
 
         if(MV_CC_CreateHandle(&_handle, deviceInfo) != MV_OK)
-            throw std::runtime_error("'MV_CC_CreateHandle' failed");
+            throw CameraError("MV_CC_CreateHandle");
 
         if(MV_CC_OpenDevice(_handle) != MV_OK)
-            throw std::runtime_error("'MV_CC_OpenDevice' failed");
+            throw CameraError("MV_CC_OpenDevice");
         
         if(MV_CC_SetEnumValue(_handle, "TriggerMode", 0) != MV_OK)
-            throw std::runtime_error("'MV_CC_SetEnumValue' turn off 'TriggerMode' failed");
+            throw CameraError("MV_CC_SetEnumValue");
 
     }
 
@@ -62,7 +74,7 @@ class OpencvCamera final {
             if(_started) return;
 
             if(MV_CC_StartGrabbing(_handle) != MV_OK)
-                throw std::runtime_error("'MV_CC_StartGrabbing' failed");
+                throw CameraError("MV_CC_StartGrabbing");
 
             _started = true;
 
@@ -73,7 +85,7 @@ class OpencvCamera final {
             if(!_started) return;
 
             if(MV_CC_StopGrabbing(_handle) != MV_OK)
-                throw std::runtime_error("'MV_CC_StopGrabbing' failed");
+                throw CameraError("MV_CC_StopGrabbing");
 
             _started = false;
 
@@ -83,12 +95,12 @@ class OpencvCamera final {
             
             if(_have_data) {
                 if(MV_CC_FreeImageBuffer(_handle, &_frame) != MV_OK)
-                    throw std::runtime_error("'MV_CC_FreeImageBuffer' failed");
+                    throw CameraError("MV_CC_FreeImageBuffer");
                 _have_data = false;
             }
 
             if(MV_CC_GetImageBuffer(_handle, &_frame, timeout_msec) != MV_OK)
-                throw std::runtime_error("'MV_CC_GetImageBuffer' failed");
+                throw CameraError("MV_CC_GetImageBuffer");
             
             unsigned width = _frame.stFrameInfo.nExtendWidth;
             unsigned height = _frame.stFrameInfo.nExtendHeight;
@@ -96,7 +108,7 @@ class OpencvCamera final {
             enum MvGvspPixelType pixel_type = _frame.stFrameInfo.enPixelType;
 
             int cv_pixel_type;
-            if(cv_pixel_type&MV_GVSP_PIX_CUSTOM) throw std::runtime_error("unsupported pixel type");
+            if(cv_pixel_type&MV_GVSP_PIX_CUSTOM) throw PixelTypeError();
             unsigned pixel_size = (MV_GVSP_PIX_EFFECTIVE_PIXEL_SIZE_MASK&pixel_type)>>MV_GVSP_PIX_EFFECTIVE_PIXEL_SIZE_SHIFT;
             switch(pixel_type&MV_GVSP_PIX_COLOR_MASK) {
                 case MV_GVSP_PIX_MONO: {
@@ -105,7 +117,7 @@ class OpencvCamera final {
                 case MV_GVSP_PIX_COLOR: {
                     cv_pixel_type = CV_MAKETYPE(pixel_size/3, 3);
                 }   break;
-                default: throw std::runtime_error("unsupported pixel type");
+                default: throw PixelTypeError();
             }
 
             _have_data = true;
@@ -134,7 +146,7 @@ class MvContext final {
             memset(&_deviceList, 0, sizeof(MV_CC_DEVICE_INFO_LIST));
 
             if(MV_CC_Initialize() != MV_OK)
-                throw std::runtime_error("'MV_CC_Initialize' failed");
+                throw CameraError("MV_CC_Initialize");
 
             enumDevices(ENUM_DEVICE_TYPE);
 
@@ -160,7 +172,7 @@ class MvContext final {
             memset(&_deviceList, 0, sizeof(MV_CC_DEVICE_INFO_LIST));
 
             if(MV_CC_EnumDevices(device_types, &_deviceList) != MV_OK)
-                throw std::runtime_error("'MV_CC_Initialize' failed");
+                throw CameraError("MV_CC_Initialize");
             
             _index_to_serial_number_map.clear();
             _serial_number_to_index_map.clear();
