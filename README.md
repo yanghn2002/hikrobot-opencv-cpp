@@ -10,7 +10,8 @@ Requires MVS to be installed on Linux.
 - GIGE
   - MV-CE020-10GC
 - USBC
-  - MV-CD020-10UC
+  - MV-CE020-10UC
+  - MV-CA050-12UC
   - MV-CS200-10UC
 
 ### Usage
