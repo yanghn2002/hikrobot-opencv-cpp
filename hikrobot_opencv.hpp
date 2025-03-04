@@ -108,7 +108,6 @@ class OpencvCamera final {
             enum MvGvspPixelType pixel_type = _frame.stFrameInfo.enPixelType;
 
             int cv_pixel_type;
-            if(cv_pixel_type&MV_GVSP_PIX_CUSTOM) throw PixelTypeError();
             unsigned pixel_size = (MV_GVSP_PIX_EFFECTIVE_PIXEL_SIZE_MASK&pixel_type)>>MV_GVSP_PIX_EFFECTIVE_PIXEL_SIZE_SHIFT;
             switch(pixel_type&MV_GVSP_PIX_COLOR_MASK) {
                 case MV_GVSP_PIX_MONO: {
