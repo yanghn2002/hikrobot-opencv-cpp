@@ -12,6 +12,7 @@
 
 namespace hikcv {
 
+
 struct Error: std::runtime_error {
     explicit Error(const std::string& msg): std::runtime_error(msg) { }
 };
@@ -204,7 +205,6 @@ class MvContext final {
         }
 
 };
-
 
 }
 
