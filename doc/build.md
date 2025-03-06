@@ -19,6 +19,7 @@ hikrobot_opencv_dep = hikrobot_opencv.get_variable('hikrobot_opencv_dep')
 > ```shell
 > meson setup build
 > meson compile -C build
+> ./build/hikrobot_opencv_example
 > ```
 
 ### GNU Make
