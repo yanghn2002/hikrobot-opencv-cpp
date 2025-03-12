@@ -197,10 +197,10 @@ class MvContext final {
 
         }
 
-        OpencvCamera createCapture(unsigned index) {
+        OpencvCamera createCapture(const unsigned index) {
             return OpencvCamera(_deviceList.pDeviceInfo[index]);
         }
-        OpencvCamera createCapture(std::string& serial_number) {
+        OpencvCamera createCapture(const std::string& serial_number) {
             return OpencvCamera(_deviceList.pDeviceInfo[_serial_number_to_index_map[serial_number]]);
         }
 
