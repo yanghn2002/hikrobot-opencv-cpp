@@ -30,11 +30,11 @@ constexpr unsigned HIKROBOT_CV_TIMEOUT_MSEC = 20000;
 constexpr int ENUM_DEVICE_TYPE = MV_USB_DEVICE|MV_GIGE_DEVICE;
 
 
-class OpencvCamera final {
+class CvCapture final {
 
     friend class MvContext;
 
-    OpencvCamera(MV_CC_DEVICE_INFO* deviceInfo): _handle(nullptr), _started(false), _have_data(false) {
+    CvCapture(MV_CC_DEVICE_INFO* deviceInfo): _handle(nullptr), _started(false), _have_data(false) {
 
         if(MV_CC_CreateHandle(&_handle, deviceInfo) != MV_OK)
             throw CameraError("MV_CC_CreateHandle");
@@ -49,7 +49,7 @@ class OpencvCamera final {
 
     public:
 
-        ~OpencvCamera(void) {
+        ~CvCapture(void) {
 
             if(_started) stop();
 
@@ -197,15 +197,17 @@ class MvContext final {
 
         }
 
-        OpencvCamera createCapture(const unsigned index) {
-            return OpencvCamera(_deviceList.pDeviceInfo[index]);
+        CvCapture createCapture(const unsigned index) {
+            return CvCapture(_deviceList.pDeviceInfo[index]);
         }
-        OpencvCamera createCapture(const std::string& serial_number) {
-            return OpencvCamera(_deviceList.pDeviceInfo[_serial_number_to_index_map[serial_number]]);
+        CvCapture createCapture(const std::string& serial_number) {
+            return CvCapture(_deviceList.pDeviceInfo[_serial_number_to_index_map[serial_number]]);
         }
 
 };
 
+
 }
+
 
 #endif//HIKROBOTOPENCVCPP_HIKROBOT_OPENCV_HPP

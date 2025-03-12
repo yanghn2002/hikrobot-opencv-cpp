@@ -17,7 +17,7 @@ int main(void) {
     std::string input_serial_number;
     std::cout << "input camera serial number to open: " << std::flush;
     std::getline(std::cin, input_serial_number);
-    hikcv::OpencvCamera camera = context.createCapture(input_serial_number);
+    hikcv::CvCapture camera = context.createCapture(input_serial_number);
     camera.start();
 
     // get OpenCV Mat and show
