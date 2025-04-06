@@ -28,6 +28,7 @@ struct PixelTypeError: Error {
 
 constexpr unsigned HIKROBOT_CV_TIMEOUT_MSEC = 20000;
 constexpr int ENUM_DEVICE_TYPE = MV_USB_DEVICE|MV_GIGE_DEVICE;
+constexpr const char* version = "0.1.0";
 
 
 class CvCapture final {
