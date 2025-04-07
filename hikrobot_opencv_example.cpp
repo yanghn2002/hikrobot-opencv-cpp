@@ -18,7 +18,7 @@ int main(void) {
     
     // open camera and start grabbing
     std::string input_serial_number;
-    std::cout << "input camera index or serial number to open: " << std::flush;
+    std::cout << "input camera serial number to open: " << std::flush;
     std::getline(std::cin, input_serial_number);
     hik::CvCapture camera = context.createCapture(input_serial_number);
     camera.start();
