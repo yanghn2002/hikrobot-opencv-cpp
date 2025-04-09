@@ -7,6 +7,8 @@ namespace hik = hikcv;
 
 int main(void) {
 
+    std::cout << "Hikrobot OpenCV " << hik::version << std::endl;
+
     // get HikrobotMvContext instance
     hik::MvContext& context = hik::MvContext::instance();
 
