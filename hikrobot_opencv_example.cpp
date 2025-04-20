@@ -14,6 +14,10 @@ int main(void) {
 
     // enum Hikrobot Mv devices
     hik::MvContext::DeviceIndex devices = context.enumDevices();
+    if(devices.empty()) {
+        std::cout << "No device found" << std::endl;
+        return 0;
+    }
     std::cout << "devices:" << std::endl;
     for(auto device: devices)
         std::cout << '\t' << device.first << ": " << device.second << std::endl;
