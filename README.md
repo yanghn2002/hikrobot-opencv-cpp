@@ -2,10 +2,6 @@
 
 Header-only C++ library for capturing OpenCV `cv::Mat` from [Hikvision](https://www.hikvision.com/ "www.hikvision.com") industrial camera.
 
-## Usage
-
-[RUNTIME](doc/runtime.md) **|** [BUILD](doc/build.md)
-
 ### Tested devices
 
 - GIGE
